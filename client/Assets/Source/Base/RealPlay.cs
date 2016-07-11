@@ -35,7 +35,7 @@ public class RealPlay : MonoBehaviour {
         {
             for (int i = 0; i < emitter.Length; i++)
             {
-                if (particle[i] != null)
+                if (emitter[i] != null)
                 {
                     emitter[i].Simulate(Time.unscaledDeltaTime);
                 }

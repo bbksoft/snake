@@ -257,8 +257,11 @@ public class GameAPI {
 
         for (int i=0; i<rs.Length; i++)
         {
-            var c = rs[i].material.color;
-            rs[i].material.color = new Color(c.r, c.g, c.b, a);
+            //if (rs[i].material.HasProperty("color"))
+            //{
+                var c = rs[i].material.color;
+                rs[i].material.color = new Color(c.r, c.g, c.b, a);
+            //}
         }
     }
 

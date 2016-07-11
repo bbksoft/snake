@@ -146,9 +146,14 @@ public class UITools
     }
 
 
-    public static void SetEanble(Transform t, bool enable)
+    public static void SetEnable(Transform t, bool enable)
     {
         t.gameObject.SetActive(enable);
+    }
+
+    public static void SetChildEnable(Transform t, string path, bool enable)
+    {
+        SetEnable(t.FindChild(path), enable);
     }
 
     public static void SetFill(Transform t, float value)
@@ -187,7 +192,7 @@ public class UITools
         SetText(t, str);
     }
 
-    public static void set_enable_image(Transform t, bool enable)
+    public static void SetEnableImage(Transform t, bool enable)
     {
         if (t == null) return;
 

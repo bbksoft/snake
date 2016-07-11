@@ -16,12 +16,13 @@ public class UIToolsWrap
 		L.RegFunction("SetButton", SetButton);
 		L.RegFunction("SetDragFun", SetDragFun);
 		L.RegFunction("SetPic", SetPic);
-		L.RegFunction("SetEanble", SetEanble);
+		L.RegFunction("SetEnable", SetEnable);
+		L.RegFunction("SetChildEnable", SetChildEnable);
 		L.RegFunction("SetFill", SetFill);
 		L.RegFunction("FllowUI", FllowUI);
 		L.RegFunction("SetChildTimeText", SetChildTimeText);
 		L.RegFunction("SetTimeText", SetTimeText);
-		L.RegFunction("set_enable_image", set_enable_image);
+		L.RegFunction("SetEnableImage", SetEnableImage);
 		L.RegFunction("GetListChild", GetListChild);
 		L.RegFunction("SetListLen", SetListLen);
 		L.RegFunction("SetDragChange", SetDragChange);
@@ -203,14 +204,32 @@ public class UIToolsWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SetEanble(IntPtr L)
+	static int SetEnable(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.Transform));
 			bool arg1 = LuaDLL.luaL_checkboolean(L, 2);
-			UITools.SetEanble(arg0, arg1);
+			UITools.SetEnable(arg0, arg1);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetChildEnable(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.Transform));
+			string arg1 = ToLua.CheckString(L, 2);
+			bool arg2 = LuaDLL.luaL_checkboolean(L, 3);
+			UITools.SetChildEnable(arg0, arg1, arg2);
 			return 0;
 		}
 		catch(Exception e)
@@ -290,14 +309,14 @@ public class UIToolsWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int set_enable_image(IntPtr L)
+	static int SetEnableImage(IntPtr L)
 	{
 		try
 		{
 			ToLua.CheckArgsCount(L, 2);
 			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.Transform));
 			bool arg1 = LuaDLL.luaL_checkboolean(L, 2);
-			UITools.set_enable_image(arg0, arg1);
+			UITools.SetEnableImage(arg0, arg1);
 			return 0;
 		}
 		catch(Exception e)
