@@ -8,12 +8,12 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
     GameObject oldObj;
 
  
-    Camera camera;
+    Camera gCamera;
 
     void Start()
     {
         GameObject obj = GameObject.Find("Main/CameraUI3d");
-        camera = obj.GetComponent<Camera>();
+        gCamera = obj.GetComponent<Camera>();
     }
 
     public void OnBeginDrag(PointerEventData data)
@@ -21,7 +21,7 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
         //Debug.Log("OnBeginDrag");
 
         
-        Ray r = camera.ScreenPointToRay(data.position);        
+        Ray r = gCamera.ScreenPointToRay(data.position);        
 
         int layer = LayerMask.NameToLayer("UIActor");
 
@@ -48,7 +48,7 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
     {
         if (dragObj == null) return;
 
-        Ray r = camera.ScreenPointToRay(data.position);
+        Ray r = gCamera.ScreenPointToRay(data.position);
         float dis = (dragObj.transform.position.z - r.origin.z) / r.direction.z;
         dragObj.transform.position = r.origin + r.direction * dis;
     }
@@ -62,9 +62,9 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
 
         Transform p = oldObj.transform.parent.parent;
 
-        GameObject obj = GameObject.Find("Main/CameraUI");
-        Camera ui_camera = obj.GetComponent<Camera>();
-        Ray r = ui_camera.ScreenPointToRay(data.position);
+       // GameObject obj = GameObject.Find("Main/CameraUI");
+       // Camera ui_camera = obj.GetComponent<Camera>();
+       // Ray r = ui_camera.ScreenPointToRay(data.position);
 
         int n1 = -1;
         int n2 = -1;

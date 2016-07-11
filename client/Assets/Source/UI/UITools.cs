@@ -267,7 +267,7 @@ public class UITools
 
         obj.transform.SetParent(t);
 
-        Transform rt = obj.GetComponent<Transform>();
+        //Transform rt = obj.GetComponent<Transform>();
         obj.transform.localScale = Vector3.one * size;
         obj.transform.localPosition = Vector3.zero;
 
