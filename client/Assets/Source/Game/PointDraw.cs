@@ -32,8 +32,9 @@ public class PointDraw : MonoBehaviour {
             SetDatas(datas,tt);
         }
     }
+    
 
-	public void SetDatas(Vector2[] datas,int[] colorIds) {
+    public void SetDatas(Vector2[] datas,int[] colorIds) {
 
         Mesh mesh = new Mesh();
 
