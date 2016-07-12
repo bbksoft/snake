@@ -272,4 +272,24 @@ public class GameAPI {
         s.len = time;
     }
 
+    static public void DrawPath(GameObject obj, Vector2 forward, Vector2[] path)
+    {
+        PathPainter p = obj.GetComponent<PathPainter>();
+        if (p == null)
+        {
+            p = obj.AddComponent<PathPainter>();
+        }
+        p.UpdatePath(forward,path); 
+    }
+
+    static public void SetCameraFllow2D(GameObject obj)
+    {
+        Fllow2D f = Camera.main.gameObject.GetComponent<Fllow2D>();
+
+        if (f == null)
+        {
+            f = Camera.main.gameObject.AddComponent<Fllow2D>();
+        }
+        f.obj = obj;
+    }
 }

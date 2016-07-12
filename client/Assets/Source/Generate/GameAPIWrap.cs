@@ -26,6 +26,8 @@ public class GameAPIWrap
 		L.RegFunction("AddNavColl", AddNavColl);
 		L.RegFunction("SetAlpha", SetAlpha);
 		L.RegFunction("AddOffAnim", AddOffAnim);
+		L.RegFunction("DrawPath", DrawPath);
+		L.RegFunction("SetCameraFllow2D", SetCameraFllow2D);
 		L.EndStaticLibs();
 	}
 
@@ -379,6 +381,40 @@ public class GameAPIWrap
 			UnityEngine.Vector3 arg1 = ToLua.ToVector3(L, 2);
 			float arg2 = (float)LuaDLL.luaL_checknumber(L, 3);
 			GameAPI.AddOffAnim(arg0, arg1, arg2);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int DrawPath(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.GameObject));
+			UnityEngine.Vector2 arg1 = ToLua.ToVector2(L, 2);
+			UnityEngine.Vector2[] arg2 = ToLua.CheckObjectArray<UnityEngine.Vector2>(L, 3);
+			GameAPI.DrawPath(arg0, arg1, arg2);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetCameraFllow2D(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 1);
+			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.GameObject));
+			GameAPI.SetCameraFllow2D(arg0);
 			return 0;
 		}
 		catch(Exception e)

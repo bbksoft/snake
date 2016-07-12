@@ -9,20 +9,23 @@ local setmetatable = setmetatable
 local rawset = rawset
 local rawget = rawget
 
+local clamp = Mathf.Clamp
+local acos 	= math.acos
+
 local Vector2 = {}
 local get = tolua.initget(Vector2)
 
 Vector2.__index = function(t,k)
 	local var = rawget(Vector2, k)
-	
-	if var == nil then							
+
+	if var == nil then
 		var = rawget(get, k)
-		
+
 		if var ~= nil then
 			return var(t)
 		end
 	end
-	
+
 	return var
 end
 
@@ -32,13 +35,13 @@ end
 
 function Vector2.New(x, y)
 	local v = {x = x or 0, y = y or 0}
-	setmetatable(v, Vector2)	
+	setmetatable(v, Vector2)
 	return v
 end
 
 function Vector2:Set(x,y)
 	self.x = x or 0
-	self.y = y or 0	
+	self.y = y or 0
 end
 
 function Vector2:Get()
@@ -55,19 +58,19 @@ end
 
 function Vector2:Normalize()
 	local v = self:Clone()
-	return v:SetNormalize()	
+	return v:SetNormalize()
 end
 
 function Vector2:SetNormalize()
-	local num = self:Magnitude()	
-	
+	local num = self:Magnitude()
+
 	if num == 1 then
 		return self
-    elseif num > 1e-05 then    
+    elseif num > 1e-05 then
         self:Div(num)
-    else    
+    else
         self:Set(0,0)
-	end 
+	end
 
 	return self
 end
@@ -77,7 +80,16 @@ function Vector2.Dot(lhs, rhs)
 end
 
 function Vector2.Angle(from, to)
-	return acos(clamp(Vector2.dot(from:Normalize(), to:Normalize()), -1, 1)) * 57.29578
+	return acos(clamp(Vector2.Dot(from:Normalize(), to:Normalize()), -1, 1)) * 57.29578
+end
+
+function Vector2.ToAngle(v)
+	local c = acos(v.x) * 57.29578
+
+	if v.y < 0 then
+		c = 360 - c
+	end
+	return c
 end
 
 
@@ -87,31 +99,43 @@ end
 
 function Vector2:Div(d)
 	self.x = self.x / d
-	self.y = self.y / d	
-	
+	self.y = self.y / d
+
 	return self
 end
 
 function Vector2:Mul(d)
 	self.x = self.x * d
 	self.y = self.y * d
-	
+
 	return self
 end
 
 function Vector2:Add(b)
 	self.x = self.x + b.x
 	self.y = self.y + b.y
-	
+
 	return self
 end
 
 function Vector2:Sub(b)
 	self.x = self.x - b.x
 	self.y = self.y - b.y
-	
-	return
+
+	return self
 end
+
+function Vector2:Rotate(a)
+	a = a / 57.29578
+	local x = math.cos(a)
+	local y = math.sin(a)
+
+	self.x = x * self.x - y * self.y
+	self.y = x * self.y + y * self.x
+
+	return self
+end
+
 
 Vector2.__tostring = function(self)
 	return string.format("[%f,%f]", self.x, self.y)
