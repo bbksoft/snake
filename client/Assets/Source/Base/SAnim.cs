@@ -3,27 +3,62 @@ using System.Collections;
 
 public class SAnim : MonoBehaviour {
 
-    public enum TType
+    public enum Type
     {
-        pos
+        pos,
+        scale,
+        rotate,
     }
 
-    public TType    type;
-    public Vector3 param;
+    public Type    type = Type.pos;
+    public Vector3  param;
+    public AnimationCurve curve;
+    public float len = 1;
 
-
+    private float time = 0;
+    private float oldCurverValue;
+    
 	// Use this for initialization
 	void Start () {
-	
-	}
+        oldCurverValue = 0;          
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        switch (type)
+        time += Time.deltaTime;        
+        if (time > len)
         {
-            case TType.pos:
-                transform.position += param * Time.deltaTime;
+            Destroy(this);
+            return;
+        }
+
+        float value = 0;
+        if (curve==null)
+        {
+            value = time;
+        }
+        
+        switch ( type )
+        {
+            case Type.pos:
+                {
+                    float x = param.x * Time.deltaTime;
+                    float y = param.y * (value - oldCurverValue);
+                    transform.localPosition += new Vector3(x, y, 0);
+                }
+                break;
+            case Type.scale:
+                {
+                    transform.localScale += param * (value - oldCurverValue);
+                }
+                break;
+            case Type.rotate:
+                {
+                    transform.Rotate( param * (value - oldCurverValue) );
+                }
                 break;
         }
-	}
+        oldCurverValue = value;
+
+    }
 }

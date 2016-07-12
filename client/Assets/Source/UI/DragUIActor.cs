@@ -7,21 +7,25 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
     GameObject dragObj;
     GameObject oldObj;
 
- 
-    Camera gCamera;
+  
+
+    Camera mCamera;
 
     void Start()
     {
-        GameObject obj = GameObject.Find("Main/CameraUI3d");
-        gCamera = obj.GetComponent<Camera>();
+        GameObject obj = GameObject.Find("Main");
+        obj= obj.transform.FindChild("CameraUI3d").gameObject;
+        mCamera = obj.GetComponent<Camera>();
     }
+
+   
 
     public void OnBeginDrag(PointerEventData data)
     {
         //Debug.Log("OnBeginDrag");
 
         
-        Ray r = gCamera.ScreenPointToRay(data.position);        
+        Ray r = mCamera.ScreenPointToRay(data.position);        
 
         int layer = LayerMask.NameToLayer("UIActor");
 
@@ -41,6 +45,10 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
             dragObj.transform.localPosition = oldObj.transform.localPosition;
 
             oldObj.SetActive(false);
+
+            Transform p = oldObj.transform.parent.parent;
+            OnDragChange change = p.GetComponent<OnDragChange>();
+            change.Do(0, 0);
         }
     }
 
@@ -48,7 +56,7 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
     {
         if (dragObj == null) return;
 
-        Ray r = gCamera.ScreenPointToRay(data.position);
+        Ray r = mCamera.ScreenPointToRay(data.position);
         float dis = (dragObj.transform.position.z - r.origin.z) / r.direction.z;
         dragObj.transform.position = r.origin + r.direction * dis;
     }
@@ -62,9 +70,11 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
 
         Transform p = oldObj.transform.parent.parent;
 
-       // GameObject obj = GameObject.Find("Main/CameraUI");
-       // Camera ui_camera = obj.GetComponent<Camera>();
-       // Ray r = ui_camera.ScreenPointToRay(data.position);
+        //GameObject obj = GameObject.Find("Main/CameraUI");
+        //Camera ui_camera = obj.GetComponent<Camera>();
+        //Ray r = ui_camera.ScreenPointToRay(data.position);
+
+        Vector3 globalMousePos;        
 
         int n1 = -1;
         int n2 = -1;
@@ -78,7 +88,7 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
                 continue;
             }
 
-            Vector3 globalMousePos;
+            //Vector3 globalMousePos;
             if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
                 child, data.position, data.pressEventCamera,out globalMousePos))
             {                
@@ -90,9 +100,24 @@ public class DragUIActor : MonoBehaviour, IBeginDragHandler,
             }
         }
 
-        if ( n2 >= 0 )
+        OnDragChange change = p.GetComponent<OnDragChange>();
+
+        if (change.nodeCancel != null)
         {
-            OnDragChange change = p.GetComponent<OnDragChange>();
+            Vector2 localPos;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                change.nodeCancel, data.position, data.pressEventCamera, out localPos))
+            {                
+                if (change.nodeCancel.rect.Contains(localPos))
+                {                    
+                    change.Do(n1,0);
+                    return;
+                }
+            }
+        }
+
+        if ( n2 >= 0 )
+        {            
             change.Do(n1, n2);
         }        
     }   

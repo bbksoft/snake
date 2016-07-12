@@ -10,6 +10,7 @@ public class UIToolsWrap
 		L.RegFunction("ClearAll", ClearAll);
 		L.RegFunction("Init", Init);
 		L.RegFunction("CreateUIObj", CreateUIObj);
+		L.RegFunction("CreateUIObjLight", CreateUIObjLight);
 		L.RegFunction("Show", Show);
 		L.RegFunction("Close", Close);
 		L.RegFunction("SetText", SetText);
@@ -26,14 +27,21 @@ public class UIToolsWrap
 		L.RegFunction("GetListChild", GetListChild);
 		L.RegFunction("SetListLen", SetListLen);
 		L.RegFunction("SetDragChange", SetDragChange);
+		L.RegFunction("SetDragCancel", SetDragCancel);
 		L.RegFunction("EnableUI3dCamera", EnableUI3dCamera);
 		L.RegFunction("AddMod", AddMod);
 		L.RegFunction("ChangeObjLight", ChangeObjLight);
+		L.RegFunction("ChangeUILight", ChangeUILight);
 		L.RegFunction("ChangeLayer", ChangeLayer);
 		L.RegFunction("DelMod", DelMod);
+		L.RegFunction("AddOff", AddOff);
 		L.RegFunction("ShowTextFrom3D", ShowTextFrom3D);
 		L.RegFunction("SetToObjTop", SetToObjTop);
 		L.RegFunction("SetAnimId", SetAnimId);
+		L.RegVar("gCanvas", get_gCanvas, set_gCanvas);
+		L.RegVar("gCam", get_gCam, set_gCam);
+		L.RegVar("gLightCanvas", get_gLightCanvas, set_gLightCanvas);
+		L.RegVar("gLightCamera", get_gLightCamera, set_gLightCamera);
 		L.EndStaticLibs();
 	}
 
@@ -76,6 +84,24 @@ public class UIToolsWrap
 			string arg0 = ToLua.CheckString(L, 1);
 			bool arg1 = LuaDLL.luaL_checkboolean(L, 2);
 			UnityEngine.GameObject o = UITools.CreateUIObj(arg0, arg1);
+			ToLua.Push(L, o);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int CreateUIObjLight(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			string arg0 = ToLua.CheckString(L, 1);
+			bool arg1 = LuaDLL.luaL_checkboolean(L, 2);
+			UnityEngine.GameObject o = UITools.CreateUIObjLight(arg0, arg1);
 			ToLua.Push(L, o);
 			return 1;
 		}
@@ -260,12 +286,29 @@ public class UIToolsWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 2);
-			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.GameObject));
-			string arg1 = ToLua.CheckString(L, 2);
-			UnityEngine.Transform o = UITools.FllowUI(arg0, arg1);
-			ToLua.Push(L, o);
-			return 1;
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 2 && TypeChecker.CheckTypes(L, 1, typeof(UnityEngine.GameObject), typeof(string)))
+			{
+				UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.ToObject(L, 1);
+				string arg1 = ToLua.ToString(L, 2);
+				UnityEngine.Transform o = UITools.FllowUI(arg0, arg1);
+				ToLua.Push(L, o);
+				return 1;
+			}
+			else if (count == 3 && TypeChecker.CheckTypes(L, 1, typeof(UnityEngine.GameObject), typeof(string), typeof(bool)))
+			{
+				UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.ToObject(L, 1);
+				string arg1 = ToLua.ToString(L, 2);
+				bool arg2 = LuaDLL.lua_toboolean(L, 3);
+				UnityEngine.Transform o = UITools.FllowUI(arg0, arg1, arg2);
+				ToLua.Push(L, o);
+				return 1;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: UITools.FllowUI");
+			}
 		}
 		catch(Exception e)
 		{
@@ -378,6 +421,23 @@ public class UIToolsWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int SetDragCancel(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.Transform));
+			UnityEngine.Transform arg1 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Transform));
+			UITools.SetDragCancel(arg0, arg1);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int EnableUI3dCamera(IntPtr L)
 	{
 		try
@@ -431,6 +491,23 @@ public class UIToolsWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int ChangeUILight(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.Transform));
+			bool arg1 = LuaDLL.luaL_checkboolean(L, 2);
+			UITools.ChangeUILight(arg0, arg1);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int ChangeLayer(IntPtr L)
 	{
 		try
@@ -465,6 +542,23 @@ public class UIToolsWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddOff(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 2);
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.Transform));
+			UnityEngine.Vector2 arg1 = ToLua.ToVector2(L, 2);
+			UITools.AddOff(arg0, arg1);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static int ShowTextFrom3D(IntPtr L)
 	{
 		try
@@ -473,8 +567,9 @@ public class UIToolsWrap
 			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.GameObject));
 			string arg1 = ToLua.CheckString(L, 2);
 			string arg2 = ToLua.CheckString(L, 3);
-			UITools.ShowTextFrom3D(arg0, arg1, arg2);
-			return 0;
+			UnityEngine.Transform o = UITools.ShowTextFrom3D(arg0, arg1, arg2);
+			ToLua.Push(L, o);
+			return 1;
 		}
 		catch(Exception e)
 		{
@@ -508,6 +603,122 @@ public class UIToolsWrap
 			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.Transform));
 			int arg1 = (int)LuaDLL.luaL_checknumber(L, 2);
 			UITools.SetAnimId(arg0, arg1);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_gCanvas(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, UITools.gCanvas);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_gCam(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, UITools.gCam);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_gLightCanvas(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, UITools.gLightCanvas);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int get_gLightCamera(IntPtr L)
+	{
+		try
+		{
+			ToLua.Push(L, UITools.gLightCamera);
+			return 1;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_gCanvas(IntPtr L)
+	{
+		try
+		{
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Transform));
+			UITools.gCanvas = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_gCam(IntPtr L)
+	{
+		try
+		{
+			UnityEngine.Camera arg0 = (UnityEngine.Camera)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Camera));
+			UITools.gCam = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_gLightCanvas(IntPtr L)
+	{
+		try
+		{
+			UnityEngine.Transform arg0 = (UnityEngine.Transform)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Transform));
+			UITools.gLightCanvas = arg0;
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int set_gLightCamera(IntPtr L)
+	{
+		try
+		{
+			UnityEngine.Camera arg0 = (UnityEngine.Camera)ToLua.CheckUnityObject(L, 2, typeof(UnityEngine.Camera));
+			UITools.gLightCamera = arg0;
 			return 0;
 		}
 		catch(Exception e)

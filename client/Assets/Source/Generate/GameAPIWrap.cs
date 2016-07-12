@@ -25,6 +25,7 @@ public class GameAPIWrap
 		L.RegFunction("NavPath", NavPath);
 		L.RegFunction("AddNavColl", AddNavColl);
 		L.RegFunction("SetAlpha", SetAlpha);
+		L.RegFunction("AddOffAnim", AddOffAnim);
 		L.EndStaticLibs();
 	}
 
@@ -360,6 +361,24 @@ public class GameAPIWrap
 			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.GameObject));
 			float arg1 = (float)LuaDLL.luaL_checknumber(L, 2);
 			GameAPI.SetAlpha(arg0, arg1);
+			return 0;
+		}
+		catch(Exception e)
+		{
+			return LuaDLL.toluaL_exception(L, e);
+		}
+	}
+
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static int AddOffAnim(IntPtr L)
+	{
+		try
+		{
+			ToLua.CheckArgsCount(L, 3);
+			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.GameObject));
+			UnityEngine.Vector3 arg1 = ToLua.ToVector3(L, 2);
+			float arg2 = (float)LuaDLL.luaL_checknumber(L, 3);
+			GameAPI.AddOffAnim(arg0, arg1, arg2);
 			return 0;
 		}
 		catch(Exception e)

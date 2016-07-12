@@ -251,18 +251,25 @@ public class GameAPI {
         n.size = new Vector3(size, size, size);
     }
 
-    static public void SetAlpha(GameObject obj,float a)
+    static public void SetAlpha(GameObject obj, float a)
     {
         Renderer[] rs = obj.GetComponentsInChildren<Renderer>();
 
-        for (int i=0; i<rs.Length; i++)
+        for (int i = 0; i < rs.Length; i++)
         {
             //if (rs[i].material.HasProperty("color"))
             //{
-                var c = rs[i].material.color;
-                rs[i].material.color = new Color(c.r, c.g, c.b, a);
+            var c = rs[i].material.color;
+            rs[i].material.color = new Color(c.r, c.g, c.b, a);
             //}
         }
+    }
+
+    static public void AddOffAnim(GameObject obj, Vector3 off, float time)
+    {
+        SAnim s = obj.AddComponent<SAnim>();
+        s.param = off;
+        s.len = time;
     }
 
 }

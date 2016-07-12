@@ -10,4 +10,11 @@ public class OnDragChange : MonoBehaviour {
     {
         fun.Call(value1, value2);
     }
+
+    public RectTransform nodeCancel;
+
+    public void SetCancel(Transform node)
+    {
+        nodeCancel = node as RectTransform;
+    }
 }

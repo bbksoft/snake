@@ -206,9 +206,9 @@ end
 
 function UI.set_enable_image(node,data)
 	if data then
-		UITools.set_enable_image(node,true)
+		UITools.SetEnableImage(node,true)
 	else
-		UITools.set_enable_image(node,false)
+		UITools.SetEnableImage(node,false)
 	end
 end
 
@@ -279,7 +279,14 @@ function UI_display.list(node,ui,data)
 	UITools.SetListLen(node,n)
 
 	if ui.drag_fun then
-		UITools.SetDragChange(node,ui.drag_fun)
+		local fun = function(id1,id2)
+			ui.drag_fun(data,node,id1,id2)
+		end
+		UITools.SetDragChange(node,fun)
+	end
+
+	if ui.cancel_node then
+		UITools.SetDragCancel(node,UI.find_child(ui.cancel_node))
 	end
 end
 
@@ -290,7 +297,14 @@ function UI_display.list_fixed(node,ui,data)
 	end
 
 	if ui.drag_fun then
-		UITools.SetDragChange(node,ui.drag_fun)
+		local fun = function(id1,id2)
+			ui.drag_fun(data,node,id1,id2)
+		end
+		UITools.SetDragChange(node,fun)
+	end
+
+	if ui.cancel_node then
+		UITools.SetDragCancel(node,UI.find_child(node,ui.cancel_node))
 	end
 end
 

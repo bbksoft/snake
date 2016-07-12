@@ -73,7 +73,7 @@ end
 
 
 -- for UI
-function _ui_begin(obj)
+function _ui_begin(obj,add)
 	if _ui_datas == nil then
 		_ui_datas = {}
 	else
@@ -82,6 +82,9 @@ function _ui_begin(obj)
 		end
 	end
 
+	if add then
+	 	_ui_add(obj)
+	end
 	_ui_datas.cur = obj
 end
 
@@ -90,6 +93,8 @@ function _ui_add(obj)
 		_ui_datas.cur.children = {}
 	end
 	table.insert(_ui_datas.cur.children,obj)
+	--obj.parent = _ui_datas.cur
+	return obj
 end
 
 function _ui_end()

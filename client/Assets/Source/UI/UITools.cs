@@ -6,8 +6,11 @@ using UnityEngine.UI;
 public class UITools
 {
 
-    static Transform gCanvas;
-    static Camera   gCam;
+    public static Transform gCanvas;
+    public static Camera    gCam;
+
+    public static Transform gLightCanvas;
+    public static Camera gLightCamera;
 
     public static void ClearAll()
     {
@@ -51,6 +54,38 @@ public class UITools
 
         return obj;
     }
+
+    public static GameObject CreateUIObjLight(string res, bool zero_size = true)
+    {
+        res = "UI/" + res;
+
+        var prefab = Resources.Load(res);
+
+        Debug.Assert(prefab, "can't find [" + res + "] in UI/prefab/.");
+
+
+        GameObject obj = GameObject.Instantiate(prefab) as GameObject;
+        obj.transform.SetParent(gLightCanvas);
+
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+
+        if (zero_size)
+        {
+            RectTransform rt = obj.GetComponent<RectTransform>();
+            if (rt)
+            {
+                rt.sizeDelta = new Vector2(0, 0);
+            }
+        }
+
+        int pos = res.LastIndexOf('/');
+        obj.name = res.Substring(pos + 1);
+
+        return obj;
+    }
+
+    
 
     public static Transform Show(string res)
     {
@@ -166,7 +201,23 @@ public class UITools
 
     public static Transform FllowUI(GameObject obj, string res)
     {
-        GameObject ui_obj = CreateUIObj(res,false);
+        return FllowUI(obj, res, false);
+    }
+
+    public static Transform FllowUI(GameObject obj, string res,bool light)
+    {
+        GameObject ui_obj;
+
+        if (light)
+        {
+            ui_obj = CreateUIObjLight(res, false);
+
+            UITools.SetToObjTop(obj, ui_obj.transform);
+        }
+        else
+        {
+            ui_obj = CreateUIObj(res, false);
+        }
 
         FllowObj f = ui_obj.AddComponent<FllowObj>();
 
@@ -248,6 +299,15 @@ public class UITools
         }
     }
 
+    public static void SetDragCancel(Transform t, Transform node)
+    {
+        OnDragChange change = t.GetComponent<OnDragChange>();
+        if (change != null)
+        {
+            change.SetCancel(node);
+        }
+    }
+
     public static void EnableUI3dCamera(bool value)
     {
         Transform t = LuaClient.Instance.transform.Find("CameraUI3d");
@@ -267,7 +327,7 @@ public class UITools
 
         obj.transform.SetParent(t);
 
-        //Transform rt = obj.GetComponent<Transform>();
+        Transform rt = obj.GetComponent<Transform>();
         obj.transform.localScale = Vector3.one * size;
         obj.transform.localPosition = Vector3.zero;
 
@@ -296,6 +356,22 @@ public class UITools
         ChangeLayer(obj.transform, layer);
     }
 
+    public static void ChangeUILight(Transform t, bool light)
+    {
+        int layer;
+
+        if (light)
+        {
+            layer = LayerMask.NameToLayer("LightUI");            
+        }
+        else
+        {
+            layer = LayerMask.NameToLayer("UI");
+        }
+
+        ChangeLayer(t, layer);
+    }
+
     public static void ChangeLayer(Transform t,int layer)
     {
         t.gameObject.layer = layer;
@@ -317,20 +393,28 @@ public class UITools
 
     }
 
+    public static void AddOff(Transform t, Vector2 v)
+    {
+        RectTransform rt = t as RectTransform;
 
-    public static void ShowTextFrom3D(GameObject obj, string res, string text)
+        rt.anchoredPosition += v;
+    }
+
+    public static Transform ShowTextFrom3D(GameObject obj, string res, string text)
     {
         GameObject uiObj = CreateUIObj(res);
 
         RectTransform t = uiObj.transform as RectTransform;
 
-        t.anchoredPosition = Get2DTop(obj, t);
+        t.anchoredPosition = Get2DTop(obj, t, gCam);
 
         Text[] ts = uiObj.GetComponentsInChildren<Text>();
         for (int i=0; i<ts.Length; i++)
         {
             ts[i].text = text;
         }
+
+        return uiObj.transform;
     }
 
     public static void SetToObjTop(GameObject obj,Transform t)
@@ -338,17 +422,24 @@ public class UITools
         RectTransform rt = t as RectTransform;
         RectTransform parent = t.parent as RectTransform;
 
+        Camera c = gCam;
         if (parent == null)
         {
             parent = gCanvas as RectTransform;
         }
+        
+
+        if (parent != gCanvas)
+        {
+            c = gLightCamera;
+        }        
 
         //Debug.Log(parent);
 
-        rt.anchoredPosition = Get2DTop(obj, parent);
+        rt.anchoredPosition = Get2DTop(obj, parent, gCam);
     }
 
-    static Vector2 Get2DTop(GameObject obj, RectTransform rect)
+    static Vector2 Get2DTop(GameObject obj, RectTransform rect,Camera c)
     {
         BoxCollider box = obj.GetComponent<BoxCollider>();
 
@@ -358,15 +449,16 @@ public class UITools
         }
 
         Vector3 v = obj.transform.position + new Vector3(0,y,0);
-        return D3_TO_UI(v, rect);
+        return D3_TO_UI(v, rect,c);
     }
 
-    static Vector2 D3_TO_UI(Vector3 pos,RectTransform rect)
-    {
+    static Vector2 D3_TO_UI(Vector3 pos,RectTransform rect,Camera c)
+    {      
         Vector3 p = Camera.main.WorldToScreenPoint(pos);
 
         Vector2 pt;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, p, gCam, out pt);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rect, p,
+            c, out pt);
 
         return pt;
     }
