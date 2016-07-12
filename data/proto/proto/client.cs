@@ -6,26 +6,16 @@ using System.Threading.Tasks;
 
 namespace proto_def
 {
-    enum test_enum
-    {
-        te_one,
-        te_two,
-    }
-
-    struct test_data
-    {
-
-    }
-
-    struct player_data
+    struct snake_data
     {
         int id;
-        string[] name;
-        test_data[] datas;
+
+        float[] path_x;
+        float[] path_y;
     }
 
     interface client_handle
     {
-        void player_update(player_data data);
+        void update_snakes(snake_data[] datas);
     }
 }

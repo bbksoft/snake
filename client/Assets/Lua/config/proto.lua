@@ -22,19 +22,26 @@ local ret = {
 			},
 		},
 		{
-			name="test_enum",
-			is_enum=true,
-			enum_values = {"te_one","te_two",},
+			name="snake_data",
 			menbers = {
+				{
+					name = "id",
+					type = "Int",
+				},
+				{
+					name = "path_x",
+					type = "Single",
+					is_array = true,
+				},
+				{
+					name = "path_y",
+					type = "Single",
+					is_array = true,
+				},
 			},
 		},
 		{
-			name="test_data",
-			menbers = {
-			},
-		},
-		{
-			name="player_data",
+			name="AcountData",
 			menbers = {
 				{
 					name = "id",
@@ -43,49 +50,6 @@ local ret = {
 				{
 					name = "name",
 					type = "String",
-					is_array = true,
-				},
-				{
-					name = "datas",
-					type = "test_data",
-					is_array = true,
-				},
-			},
-		},
-		{
-			name="data_tt",
-			menbers = {
-				{
-					name = "id",
-					type = "Int",
-				},
-			},
-		},
-		{
-			name="data_id",
-			menbers = {
-				{
-					name = "key",
-					type = "String",
-				},
-				{
-					name = "index",
-					type = "Int",
-				},
-				{
-					name = "array",
-					type = "Int",
-					is_array = true,
-				},
-				{
-					name = "datas",
-					type = "String",
-					is_array = true,
-				},
-				{
-					name = "datatts",
-					type = "data_tt",
-					is_array = true,
 				},
 			},
 		},
@@ -93,14 +57,15 @@ local ret = {
 	funs = {
 		{
 			id=1,
-			name="player_update",
+			name="update_snakes",
 			class_name="client_handle",
 			param_list = {
 				{
-					type = "player_data",
+					type = "snake_data",
+					is_array = true,
 				},
 			},
-			ret =
+			ret = 
 				{
 					type = "Void",
 				},
@@ -108,28 +73,35 @@ local ret = {
 		{
 			id=2,
 			name="login",
-			class_name="test",
+			class_name="Account",
 			param_list = {
-				{
-					type = "data_id",
-				},
 				{
 					type = "String",
 				},
 				{
-					type = "Int",
-					is_array = true,
+					type = "String",
 				},
+			},
+			ret = 
+				{
+					type = "AcountData",
+				},
+		},
+		{
+			id=3,
+			name="snake_turn",
+			class_name="Game",
+			param_list = {
 				{
 					type = "Single",
 				},
 				{
-					type = "Boolean",
+					type = "Single",
 				},
 			},
-			ret =
+			ret = 
 				{
-					type = "Int",
+					type = "Void",
 				},
 		},
 	}

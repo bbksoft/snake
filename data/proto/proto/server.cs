@@ -6,24 +6,19 @@ using System.Threading.Tasks;
 
 namespace proto_def
 {
-
-// ------ for test ------
-    struct data_tt
+    struct AcountData
     {
         int id;
+        string name;
     }
 
-    struct data_id
+    interface Account
     {
-        string key;
-        int index;
-        int[] array;
-        string[] datas;
-        data_tt[] datatts;
+        AcountData login(string name, string pwd);
     }
 
-    interface test
+    interface Game
     {
-        int login(data_id id,string token,int[] datas,float z,bool t);                         
+        void snake_turn(float x,float y);                         
     }
 }

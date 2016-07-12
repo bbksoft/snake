@@ -1,0 +1,8 @@
+G:\workspace\snake\data\config_tool\bin\Debug\config.exe.config
+G:\workspace\snake\data\config_tool\bin\Debug\config.exe
+G:\workspace\snake\data\config_tool\bin\Debug\config.pdb
+G:\workspace\snake\data\config_tool\bin\Debug\Excel.dll
+G:\workspace\snake\data\config_tool\bin\Debug\ICSharpCode.SharpZipLib.dll
+G:\workspace\snake\data\config_tool\obj\Debug\config.csprojResolveAssemblyReference.cache
+G:\workspace\snake\data\config_tool\obj\Debug\config.exe
+G:\workspace\snake\data\config_tool\obj\Debug\config.pdb

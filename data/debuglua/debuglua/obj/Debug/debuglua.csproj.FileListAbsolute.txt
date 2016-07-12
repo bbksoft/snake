@@ -1,0 +1,6 @@
+G:\workspace\snake\data\debuglua\debuglua\bin\Debug\debuglua.exe.config
+G:\workspace\snake\data\debuglua\debuglua\bin\Debug\debuglua.exe
+G:\workspace\snake\data\debuglua\debuglua\bin\Debug\debuglua.pdb
+G:\workspace\snake\data\debuglua\debuglua\obj\Debug\debuglua.csprojResolveAssemblyReference.cache
+G:\workspace\snake\data\debuglua\debuglua\obj\Debug\debuglua.exe
+G:\workspace\snake\data\debuglua\debuglua\obj\Debug\debuglua.pdb

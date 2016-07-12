@@ -1,0 +1,7 @@
+G:\workspace\snake\data\proto\proto\bin\Debug\proto.exe.config
+G:\workspace\snake\data\proto\proto\bin\Debug\proto.exe
+G:\workspace\snake\data\proto\proto\bin\Debug\proto.pdb
+G:\workspace\snake\data\proto\proto\bin\Debug\Newtonsoft.Json.dll
+G:\workspace\snake\data\proto\proto\obj\Debug\proto.csprojResolveAssemblyReference.cache
+G:\workspace\snake\data\proto\proto\obj\Debug\proto.exe
+G:\workspace\snake\data\proto\proto\obj\Debug\proto.pdb
