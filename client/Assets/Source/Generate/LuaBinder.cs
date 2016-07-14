@@ -11,6 +11,7 @@ public static class LuaBinder
 		L.BeginModule(null);
 		GameAPIWrap.Register(L);
 		UIToolsWrap.Register(L);
+		SoundAPIWrap.Register(L);
 		HttpDownWrap.Register(L);
 		DebuggerWrap.Register(L);
 		L.BeginModule("UnityEngine");
