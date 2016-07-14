@@ -233,8 +233,11 @@ function UI_display.text(node,ui,data)
 	else
 		--print("test",data)
 		--print(_s(ui))
-		if type(data) == "string" then
+		local t = type(data)
+		if t == "string" then
 			UITools.SetText(node,data)
+		elseif t == "number" then
+			UITools.SetText(node,format_number(data))
 		else
 			UITools.SetText(node,tostring(data))
 		end
@@ -248,7 +251,11 @@ end
 function UI_display.button(node,ui,data)
 	--print("node",node)
 	local fun = function()
+		local old_index = sound_player.index
 		ui.fun(data,node)
+		if sound_player.index == old_index then
+			sound_player.play("aow2_sfx_button_click")
+		end
 	end
 	UITools.SetButton(node,fun)
 end
@@ -314,6 +321,7 @@ end
 
 function UI_display.close(node,ui,data)
 	local fun = function()
+		sound_player.play("aow2_sfx_button_close")
 		UI.close()
 	end
 	UITools.SetButton(node,fun)

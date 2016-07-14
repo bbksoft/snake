@@ -2,7 +2,7 @@ require Tools
 
 
 defmodule Server.User do
-	
+
 # ---  tcp listen  ---
 #
 
@@ -11,7 +11,7 @@ defmodule Server.User do
 	end
 
 	def stop() do
-		
+
 
 	end
 
@@ -25,11 +25,11 @@ defmodule Server.User do
 	end
 
 	defp loop_acceptor(socket,mods) do
-	  	{:ok, client} = :gen_tcp.accept(socket)	  	
+	  	{:ok, client} = :gen_tcp.accept(socket)
 
-	  	IO.puts "accepted socket"	  	
+	  	IO.puts "accepted socket"
 	  	pid = start_user(client,mods)
-	  	:gen_tcp.controlling_process(client,pid)	  	
+	  	:gen_tcp.controlling_process(client,pid)
 
 		loop_acceptor(socket,mods)
 	end
@@ -45,7 +45,7 @@ defmodule Server.User do
 
 	#- self call functions
 	def add_mod(state, mods) when is_list(mods) do
-		mods = List.fordl(mods,state.mods,fn(v,acc)->
+		mods = List.foldl(mods,state.mods,fn(v,acc)->
 			key = Macro.to_string(v)
 			Map.put(acc,key,v)
 		end)
@@ -54,7 +54,7 @@ defmodule Server.User do
 
 	def add_mod(state, mod)do
 		key = Macro.to_string(mod)
-		mods = Map.put(state.mods,key,mod)		
+		mods = Map.put(state.mods,key,mod)
 		%{state | mods: mods}
 	end
 
@@ -69,7 +69,7 @@ defmodule Server.User do
 			pid;
 		_ ->
 			nil
-		end 	
+		end
 	end
 
 	def init({socket,mods}) do
@@ -94,13 +94,13 @@ defmodule Server.User do
 			end
 		rescue
  			er ->
- 				Tools.error(data) 			
+ 				Tools.error(data)
  				Tools.error(er)
 		end
-		
+
 		{:noreply, state}
 	end
-		
+
 	def handle_cast(params,state) do
 		Tools.log({:handle_cast,params})
 		{:noreply, state}
@@ -109,8 +109,8 @@ defmodule Server.User do
 
 
 
-	def handle_info({:tcp,_,data},state) do		
-		Tools.log(data)		
+	def handle_info({:tcp,_,data},state) do
+		Tools.log(data)
 		:gen_tcp.send(state.socket,data)
 
 		#Server.User.call_client("server_handle","login",[nil,"test",nil,1.234567,true])
@@ -119,16 +119,18 @@ defmodule Server.User do
 		call_data = Proto.bin_to_term(state.proto,data)
 
 		mod = state.mods[call_data.class]
+		state =
 		if mod do
-			state = apply(mod,String.to_atom(call_data.fun),call_data.params)
+			apply(mod,String.to_atom(call_data.fun),call_data.params)
 		else
 			Tools.log("can't find mod:" <> call_data.class)
-		end		
+			state
+		end
 
 		{:noreply, state}
-	end	
+	end
 
-	def handle_info({:tcp_closed,socket},state) do		
+	def handle_info({:tcp_closed,socket},state) do
 
 		state = if state.socket === socket do
 			Tools.log("do close socket")
@@ -136,12 +138,12 @@ defmodule Server.User do
 		else
 			Tools.log("close socket outtime")
 			state
-		end		
+		end
 
 		{:noreply, state}
 	end
 
-	def handle_info(params,state) do		
+	def handle_info(params,state) do
 
 		Tools.log({:handle_info,params})
 

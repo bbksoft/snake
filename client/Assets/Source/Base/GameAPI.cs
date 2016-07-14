@@ -272,24 +272,35 @@ public class GameAPI {
         s.len = time;
     }
 
-    static public void DrawPath(GameObject obj, Vector2 forward, Vector2[] path,float width)
+    static public void LinkEffectAnim(GameObject obj, GameObject src, GameObject des, float node)
     {
-        PathPainter p = obj.GetComponent<PathPainter>();
-        if (p == null)
-        {
-            p = obj.AddComponent<PathPainter>();
-        }
-        p.UpdatePath(forward,path,width); 
+        LinkEffectAnim(obj, src, des, node, -1);
+    }
+    static public void LinkEffectAnim(GameObject obj, GameObject src, GameObject des, float node, float time)
+    {
+        LinkEffect e = obj.AddComponent<LinkEffect>();
+        e.src = src;
+        e.des = des;
+        e.offPos = node;
+        e.SetLife(time);       
     }
 
-    static public void SetCameraFllow2D(GameObject obj)
+    static public void LinkEffect(GameObject obj, GameObject src, GameObject des, float node)
     {
-        Fllow2D f = Camera.main.gameObject.GetComponent<Fllow2D>();
-
-        if (f == null)
+        LinkEffect(obj, src, des, node, -1);
+    }
+    static public void LinkEffect(GameObject obj, GameObject src, GameObject des, float node, float time)
+    {
+        LinkEffect e = obj.AddComponent<LinkEffect>();
+        e.src = src;
+        e.des = des;
+        e.offPos = node;
+        
+        if ( time > 0 )
         {
-            f = Camera.main.gameObject.AddComponent<Fllow2D>();
-        }
-        f.obj = obj;
+            Delay d = obj.AddComponent<Delay>();
+            d.delay = time;
+            d.fun = MyFuns.TFun.DelSelf;
+        } 
     }
 }

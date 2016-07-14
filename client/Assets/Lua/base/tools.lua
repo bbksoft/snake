@@ -202,9 +202,29 @@ my_call = function(fun)
 	fun()
 end
 
-function set_test_skill()
-	print("test skill")
-	my_call = function(fun)
-		xpcall(fun, function(e) print(debug.traceback()) return e end)
+function set_value(value)
+	if value == "test_skill" then
+		my_call = function(fun)
+			xpcall(fun, function(e) print(debug.traceback()) return e end)
+		end
 	end
+
+	_G[value] = true
+end
+
+function format_number(data)
+	local low = data % 1
+	local str = ""
+	if low  ~= 0 then
+		data = data - low
+		low = math.floor(low*100)
+		str = "." .. tostring(low)
+	end
+	while ( data > 1000) do
+		local low = data % 1000
+		str =  "," ..  string.format("%03d",low) .. str
+		data = data - low
+		data = data / 1000
+	end
+	return (tostring(data)..str)
 end

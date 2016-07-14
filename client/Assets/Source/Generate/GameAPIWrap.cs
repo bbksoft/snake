@@ -26,8 +26,8 @@ public class GameAPIWrap
 		L.RegFunction("AddNavColl", AddNavColl);
 		L.RegFunction("SetAlpha", SetAlpha);
 		L.RegFunction("AddOffAnim", AddOffAnim);
-		L.RegFunction("DrawPath", DrawPath);
-		L.RegFunction("SetCameraFllow2D", SetCameraFllow2D);
+		L.RegFunction("LinkEffectAnim", LinkEffectAnim);
+		L.RegFunction("LinkEffect", LinkEffect);
 		L.EndStaticLibs();
 	}
 
@@ -390,17 +390,35 @@ public class GameAPIWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int DrawPath(IntPtr L)
+	static int LinkEffectAnim(IntPtr L)
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 4);
-			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.GameObject));
-			UnityEngine.Vector2 arg1 = ToLua.ToVector2(L, 2);
-			UnityEngine.Vector2[] arg2 = ToLua.CheckObjectArray<UnityEngine.Vector2>(L, 3);
-			float arg3 = (float)LuaDLL.luaL_checknumber(L, 4);
-			GameAPI.DrawPath(arg0, arg1, arg2, arg3);
-			return 0;
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 4 && TypeChecker.CheckTypes(L, 1, typeof(UnityEngine.GameObject), typeof(UnityEngine.GameObject), typeof(UnityEngine.GameObject), typeof(float)))
+			{
+				UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.ToObject(L, 1);
+				UnityEngine.GameObject arg1 = (UnityEngine.GameObject)ToLua.ToObject(L, 2);
+				UnityEngine.GameObject arg2 = (UnityEngine.GameObject)ToLua.ToObject(L, 3);
+				float arg3 = (float)LuaDLL.lua_tonumber(L, 4);
+				GameAPI.LinkEffectAnim(arg0, arg1, arg2, arg3);
+				return 0;
+			}
+			else if (count == 5 && TypeChecker.CheckTypes(L, 1, typeof(UnityEngine.GameObject), typeof(UnityEngine.GameObject), typeof(UnityEngine.GameObject), typeof(float), typeof(float)))
+			{
+				UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.ToObject(L, 1);
+				UnityEngine.GameObject arg1 = (UnityEngine.GameObject)ToLua.ToObject(L, 2);
+				UnityEngine.GameObject arg2 = (UnityEngine.GameObject)ToLua.ToObject(L, 3);
+				float arg3 = (float)LuaDLL.lua_tonumber(L, 4);
+				float arg4 = (float)LuaDLL.lua_tonumber(L, 5);
+				GameAPI.LinkEffectAnim(arg0, arg1, arg2, arg3, arg4);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: GameAPI.LinkEffectAnim");
+			}
 		}
 		catch(Exception e)
 		{
@@ -409,14 +427,35 @@ public class GameAPIWrap
 	}
 
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static int SetCameraFllow2D(IntPtr L)
+	static int LinkEffect(IntPtr L)
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 1);
-			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.GameObject));
-			GameAPI.SetCameraFllow2D(arg0);
-			return 0;
+			int count = LuaDLL.lua_gettop(L);
+
+			if (count == 4 && TypeChecker.CheckTypes(L, 1, typeof(UnityEngine.GameObject), typeof(UnityEngine.GameObject), typeof(UnityEngine.GameObject), typeof(float)))
+			{
+				UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.ToObject(L, 1);
+				UnityEngine.GameObject arg1 = (UnityEngine.GameObject)ToLua.ToObject(L, 2);
+				UnityEngine.GameObject arg2 = (UnityEngine.GameObject)ToLua.ToObject(L, 3);
+				float arg3 = (float)LuaDLL.lua_tonumber(L, 4);
+				GameAPI.LinkEffect(arg0, arg1, arg2, arg3);
+				return 0;
+			}
+			else if (count == 5 && TypeChecker.CheckTypes(L, 1, typeof(UnityEngine.GameObject), typeof(UnityEngine.GameObject), typeof(UnityEngine.GameObject), typeof(float), typeof(float)))
+			{
+				UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.ToObject(L, 1);
+				UnityEngine.GameObject arg1 = (UnityEngine.GameObject)ToLua.ToObject(L, 2);
+				UnityEngine.GameObject arg2 = (UnityEngine.GameObject)ToLua.ToObject(L, 3);
+				float arg3 = (float)LuaDLL.lua_tonumber(L, 4);
+				float arg4 = (float)LuaDLL.lua_tonumber(L, 5);
+				GameAPI.LinkEffect(arg0, arg1, arg2, arg3, arg4);
+				return 0;
+			}
+			else
+			{
+				return LuaDLL.luaL_throw(L, "invalid arguments to method: GameAPI.LinkEffect");
+			}
 		}
 		catch(Exception e)
 		{
