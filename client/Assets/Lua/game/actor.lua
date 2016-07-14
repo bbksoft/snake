@@ -52,48 +52,56 @@ end
 
 function Actor:turn_forward(v)
     v:SetNormalize()
-    -- local a = v:ToAngle()
-    -- local b = self.forward:ToAngle()
-    --
-    -- local d = a - b
-    --
-    -- if d > 180 then
-    --     d = d - 360
-    -- elseif d < -180 then
-    --     d = d + 360
-    -- end
-    --self.rotate_value = d
-    self.forward = v
-    self:add_path()
+    local a = v:ToAngle()
+    local b = self.forward:ToAngle()
+
+    local d = a - b
+
+    if d > 180 then
+         d = d - 360
+    elseif d < -180 then
+         d = d + 360
+    end
+    self.rotate_value = d
+    --self.forward = v
+    --self:add_path()
 end
 
 function Actor:update_forward()
     if self.rotate_value then
-        local r = client.dt * 180
+        self.rotate_time = self.rotate_time or 0
 
-        if self.rotate_value < 0 then
-            r = -r
-            if r < self.rotate_value then
-                r = self.rotate_value
-                self.rotate_value = nil
+        if self.rotate_time < client.time then
+            local r = 0.2 * 180
+
+            if self.rotate_value < 0 then
+                r = -r
+                if r < self.rotate_value then
+                    r = self.rotate_value
+                    self.rotate_value = nil
+                else
+                    self.rotate_value = self.rotate_value - r
+                end
             else
-                self.rotate_value = self.rotate_value - r
+                if r > self.rotate_value then
+                    r = self.rotate_value
+                    self.rotate_value = nil
+                else
+                    self.rotate_value = self.rotate_value - r
+                end
             end
-        else
-            if r > self.rotate_value then
-                r = self.rotate_value
-                self.rotate_value = nil
-            else
-                self.rotate_value = self.rotate_value - r
-            end
+
+            self.forward:Rotate(r):SetNormalize()
+            self:add_path()
+
+            self.rotate_time = client.time + 0.2
         end
-
-        self.forward:Rotate(r):SetNormalize()
-        self:add_path()
     end
 end
 
 function Actor:update_move()
+    self.trail_len = self.trail_len + 0.5 * client.dt
+
     local dis = self.speed * client.dt
     self.pos:Add(self.forward:Clone():Mul(dis))
 
@@ -136,7 +144,7 @@ end
 
 function Actor:draw()
     self.obj.transform.localPosition = Vector3(self.pos.x,self.pos.y,0);
-    GameAPI.DrawPath(self.obj,self.forward,self.path)
+    GameAPI.DrawPath(self.obj,self.forward,self.path,0.1)
 end
 
 return Actor

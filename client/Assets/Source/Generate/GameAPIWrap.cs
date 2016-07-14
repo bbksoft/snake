@@ -394,11 +394,12 @@ public class GameAPIWrap
 	{
 		try
 		{
-			ToLua.CheckArgsCount(L, 3);
+			ToLua.CheckArgsCount(L, 4);
 			UnityEngine.GameObject arg0 = (UnityEngine.GameObject)ToLua.CheckUnityObject(L, 1, typeof(UnityEngine.GameObject));
 			UnityEngine.Vector2 arg1 = ToLua.ToVector2(L, 2);
 			UnityEngine.Vector2[] arg2 = ToLua.CheckObjectArray<UnityEngine.Vector2>(L, 3);
-			GameAPI.DrawPath(arg0, arg1, arg2);
+			float arg3 = (float)LuaDLL.luaL_checknumber(L, 4);
+			GameAPI.DrawPath(arg0, arg1, arg2, arg3);
 			return 0;
 		}
 		catch(Exception e)

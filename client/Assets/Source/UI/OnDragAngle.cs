@@ -10,7 +10,7 @@ public class OnDragAngle : MonoBehaviour,
 {
 
     public string fun_name;
-
+    public float inval = 0.1f;
 
     Vector2 direct;
     float   dirtyTime;
@@ -40,13 +40,6 @@ public class OnDragAngle : MonoBehaviour,
 
     void SetDirect(Vector2 position)
     {
-        if (dirty == false)
-        { 
-            if (dirtyTime < Time.realtimeSinceStartup)
-            {                
-                dirtyTime = Time.realtimeSinceStartup;                
-            }
-        }
         dirty = true;
         Vector2 v = position - new Vector2(Screen.width/2, Screen.height/2);
         direct = v.normalized;
@@ -58,7 +51,7 @@ public class OnDragAngle : MonoBehaviour,
         {
             LuaClient.CallFun(fun_name, direct);
             dirty = false;
-            dirtyTime += 0.2f;
+            dirtyTime = Time.realtimeSinceStartup + inval;
         }
     }
 

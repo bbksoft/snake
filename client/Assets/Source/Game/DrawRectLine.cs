@@ -6,13 +6,10 @@ public class DrawRectLine : MonoBehaviour {
    
     public int size = 20;
     public int unitWidth = 2;
-    public Material mat;
-
-    Mesh mesh;
 
     // Use this for initialization
     void Start () {
-        mesh = new Mesh();
+        Mesh mesh = new Mesh();
        
         int count = size*size;
 
@@ -50,20 +47,25 @@ public class DrawRectLine : MonoBehaviour {
         mesh.uv = UV;
         mesh.triangles = triangles;
 
-        //mesh.SetVertices();
+        Vector3 v = Camera.main.transform.localPosition;
+
+        v.x = Mathf.Floor(v.x / unitWidth) * unitWidth;
+        v.y = Mathf.Floor(v.y / unitWidth) * unitWidth;
+        v.z = 0;
+
+
+        MeshFilter f = GetComponent<MeshFilter>();
+
+        f.mesh = mesh;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 v = Camera.main.transform.localPosition;
-
-        v.x = Mathf.Floor(v.x/ unitWidth) * unitWidth;
-        v.y = Mathf.Floor(v.y/ unitWidth) * unitWidth;
-        v.z = 0;
-
         float worldSize = unitWidth * size;
-
-        Graphics.DrawMesh(mesh, transform.position + v - new Vector3(worldSize / 2.0f, worldSize / 2.0f,0),
-            transform.rotation, mat, 0);
+        Vector3 v = Camera.main.transform.position;
+        v.x = Mathf.Floor(v.x / unitWidth);
+        v.y = Mathf.Floor(v.y / unitWidth);
+        v.z = transform.position.z;
+        transform.position = v - new Vector3(worldSize / 2.0f, worldSize / 2.0f, 0);
     }
 }
