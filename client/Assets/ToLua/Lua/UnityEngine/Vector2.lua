@@ -83,8 +83,14 @@ function Vector2.Angle(from, to)
 	return acos(clamp(Vector2.Dot(from:Normalize(), to:Normalize()), -1, 1)) * 57.29578
 end
 
+function Vector2.FromAngle(angle)
+	local angel =  angle / 57.29578
+	return Vector2(math.cos(angel),math.sin(angel))
+end
+
 function Vector2.ToAngle(v)
-	local c = acos(v.x) * 57.29578
+	local len = v:Magnitude()
+	local c = acos(v.x/len) * 57.29578
 
 	if v.y < 0 then
 		c = 360 - c

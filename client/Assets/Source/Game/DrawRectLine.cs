@@ -16,7 +16,7 @@ public class DrawRectLine : MonoBehaviour {
         Vector3[] vertices = new Vector3[count*4];
         Vector2[] UV = new Vector2[count*4];
         int[] triangles = new int[count * 6];
-
+               
         for (int i = 0; i < size; i++)
         { 
             for (int j = 0; j < size; j++)

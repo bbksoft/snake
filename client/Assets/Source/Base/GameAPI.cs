@@ -282,7 +282,7 @@ public class GameAPI {
         e.src = src;
         e.des = des;
         e.offPos = node;
-        e.SetLife(time);       
+        e.SetLife(time);
     }
 
     static public void LinkEffect(GameObject obj, GameObject src, GameObject des, float node)
@@ -295,12 +295,39 @@ public class GameAPI {
         e.src = src;
         e.des = des;
         e.offPos = node;
-        
+
         if ( time > 0 )
         {
             Delay d = obj.AddComponent<Delay>();
             d.delay = time;
             d.fun = MyFuns.TFun.DelSelf;
-        } 
+        }
     }
+
+
+	// for snake AddPosInParent
+	static public void DrawPath(GameObject obj, Vector2 forward, Vector2[] path,float width)
+	{
+	  PathPainter p = obj.GetComponent<PathPainter>();
+	  if (p == null)
+	  {
+		  p = obj.AddComponent<PathPainter>();
+	  }
+	  p.UpdatePath(forward,path,width);
+	}
+
+	static public void SetCameraFllow2D(GameObject obj)
+	{
+		Fllow2D f = Camera.main.gameObject.GetComponent<Fllow2D>();
+
+		if (f == null)
+		{
+			f = Camera.main.gameObject.AddComponent<Fllow2D>();
+		}
+
+        f.obj = obj;
+	}
+
+
+
 }

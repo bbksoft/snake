@@ -3,8 +3,6 @@
 -- global require
 local Actor = require "game.actor"
 
-
-
 local Client = {}
 
 function Client.create(data)
@@ -23,13 +21,32 @@ end
 function Client:init()
     self.actors = {}
     self.dt = 0
-    self.time = 0
+    self.fixed_dt  = 0.2
+
+    self.time = Time.realtimeSinceStartup
+    self.fixed_time = Time.realtimeSinceStartup
 
     local fun = function()
-        self:update(Time.deltaTime)
+        while ( self.fixed_time < Time.realtimeSinceStartup ) do
+            self:update_fixed()
+
+            if (self.time < self.fixed_time) then
+                self:update(self.fixed_dt)
+            end
+
+            self.fixed_time = self.fixed_time + self.fixed_dt
+        end
+        self:update(Time.realtimeSinceStartup-self.time)
+        self:draw()
     end
 
     UpdateBeat:Add(fun,self)
+end
+
+function Client:draw()
+    for k,v in pairs(self.actors) do
+        v:draw()
+    end
 end
 
 function Client:update(dt)
@@ -41,6 +58,12 @@ function Client:update(dt)
         v:update()
     end
 
+end
+
+function Client:update_fixed()
+    for k,v in pairs(self.actors) do
+        v:update_fixed()
+    end
 end
 
 function Client:create_actor(data)

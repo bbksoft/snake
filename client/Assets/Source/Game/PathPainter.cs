@@ -27,20 +27,23 @@ public class PathPainter : MonoBehaviour {
         forward = new Quaternion(0, 0, 0.7071f, 0.7071f) * forward;
 
 
-        Vector3 pos0 = forward * width;
-        Vector3 pos1 = -forward *  width;
+        Vector3 pos0 = forward * width / 2;
+        Vector3 pos1 = -forward *  width / 2;
+
+        float uv_top = 0;
 
         for (int pos = count-2; pos >= 0; pos--)
         {
             forward = path[pos+1] - path[pos];
+            float dis = forward.magnitude;
             forward = forward.normalized;
             forward = new Quaternion(0, 0, 0.7071f, 0.7071f) * forward;
 
             Vector3 curPos = path[pos];
             curPos = curPos - transform.localPosition;
             curPos.z = 0;
-            Vector3 pos2 = curPos - forward * width;
-            Vector3 pos3 = curPos + forward * width;
+            Vector3 pos2 = curPos - forward * width / 2;
+            Vector3 pos3 = curPos + forward * width / 2; 
 
             vertices[pos * 4 + 0] = pos0;
             vertices[pos * 4 + 1] = pos1;
@@ -51,10 +54,14 @@ public class PathPainter : MonoBehaviour {
             pos1 = pos2;
 
 
-            UV[pos * 4 + 0] = new Vector2(1, 1);
-            UV[pos * 4 + 1] = new Vector2(1, 0);
-            UV[pos * 4 + 2] = new Vector2(0, 0);
-            UV[pos * 4 + 3] = new Vector2(0, 1);
+            dis = dis / width;
+
+            UV[pos * 4 + 0] = new Vector2(0, uv_top + 0);
+            UV[pos * 4 + 1] = new Vector2(1, uv_top + 0);
+            UV[pos * 4 + 2] = new Vector2(1, uv_top + dis);
+            UV[pos * 4 + 3] = new Vector2(0, uv_top + dis);
+
+            uv_top += dis;
 
             triangles[pos * 6 + 0] = pos * 4 + 0;
             triangles[pos * 6 + 1] = pos * 4 + 1;
@@ -69,5 +76,7 @@ public class PathPainter : MonoBehaviour {
         mesh.triangles = triangles;
 
         m.mesh = mesh;
+
+
     }
 }
