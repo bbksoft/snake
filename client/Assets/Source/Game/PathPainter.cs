@@ -76,7 +76,5 @@ public class PathPainter : MonoBehaviour {
         mesh.triangles = triangles;
 
         m.mesh = mesh;
-
-
     }
 }

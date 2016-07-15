@@ -153,49 +153,20 @@ function load_gameobject(res,parent)
 	return obj
 end
 
-function line_inter_circle(pt_start,pt_end,pt_center,radius)
-    local dx = pt_end.x - pt_start.x
-    local dz = pt_end.z - pt_start.z
-
-    local dis = math.sqrt(dx^2 + dz^2);
-
-
-    local d_x = dx / dis;
-    local d_z = dz / dis;
-
-
-    local e_x = pt_center.x - pt_start.x;
-    local e_z = pt_center.z - pt_start.z;
-
-    local a = e_x * d_x + e_z * d_z
-    local a2 = a * a
-
-    local e2 = e_x * e_x + e_z * e_z
-
-    local r2 = radius * radius
-
-    return ((r2 - e2 + a2) >= 0)
-end
-
 function dis_pos(a,b)
 	local dx = a.x - b.x
-	local dz = a.z - b.z
+	local dy = a.y - b.y
 
-	return math.sqrt(dx*dx+dz*dz)
+	return math.sqrt(dx*dx+dy*dy)
 end
 
-function line_pos(pos1,pos2,dis)
-	local dx = pos2.x - pos1.x
-	local dz = pos2.z - pos1.z
+function dis_pos_2(a,b)
+	local dx = a.x - b.x
+	local dy = a.y - b.y
 
-	local pos_dis =  math.sqrt(dx*dx+dz*dz)
-
-	if pos_dis > 0 then
-		return Vector3(pos1.x+dx*dis/pos_dis,pos1.y,pos1.z+dz*dis/pos_dis)
-	else
-		return pos1
-	end
+	return dx*dx+dy*dy
 end
+
 
 
 my_call = function(fun)

@@ -10,7 +10,8 @@ UI = require("base.ui")
 
 
 function Main()
-
+    math.randomseed(os.time())
+    
     client = require("game.client").create()
     client.my_id = 1
     client:create_actor({id=1})

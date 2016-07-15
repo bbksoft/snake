@@ -328,6 +328,14 @@ public class GameAPI {
         f.obj = obj;
 	}
 
+	static public void SetPoints(GameObject obj,Vector2[] datas,int[] colorIds)
+	{
+		PointDraw f = obj.GetComponent<PointDraw>();
 
+		if (f != null)
+		{
+            f.SetDatas(datas, colorIds);
+		}
+	}
 
 }

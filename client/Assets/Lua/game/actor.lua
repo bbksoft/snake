@@ -152,6 +152,11 @@ function Actor:add_path()
     -- end
 end
 
+function Actor:add_trail(value)
+    value = value or 0.2
+    self.trail_len = self.trail_len + value
+end
+
 function Actor:draw()
     --print(self.draw_angle)
     self.obj_head.transform.eulerAngles = Vector3(0,0,self.draw_angle)

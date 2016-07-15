@@ -1,4 +1,4 @@
-﻿Shader "Snake/normal" {
+﻿Shader "snake/normal" {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
     }
