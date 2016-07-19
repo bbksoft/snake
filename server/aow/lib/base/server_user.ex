@@ -73,7 +73,7 @@ defmodule Server.User do
 	end
 
 	def init({socket,mods}) do
-		state = %{socket: socket, proto: G.get(:proto), mods: %{} }
+		state = %{class: :user, socket: socket, proto: G.get(:proto), mods: %{} }
 		state = add_mod(state,mods)
 		{:ok, state}
 	end
@@ -106,8 +106,16 @@ defmodule Server.User do
 		{:noreply, state}
 	end
 
+	defp callFun(state,mod,call_data) do
+		fun = String.to_atom(call_data.fun)
+		new_state = apply(mod,fun,[state|call_data.params])
 
-
+		if is_map(new_state) and new_state.class == state.class do
+			new_state
+		else
+			state
+		end
+	end
 
 	def handle_info({:tcp,_,data},state) do
 		Tools.log(data)
@@ -121,7 +129,7 @@ defmodule Server.User do
 		mod = state.mods[call_data.class]
 		state =
 		if mod do
-			apply(mod,String.to_atom(call_data.fun),call_data.params)
+			callFun(state,mod,call_data)
 		else
 			Tools.log("can't find mod:" <> call_data.class)
 			state
@@ -129,6 +137,7 @@ defmodule Server.User do
 
 		{:noreply, state}
 	end
+
 
 	def handle_info({:tcp_closed,socket},state) do
 

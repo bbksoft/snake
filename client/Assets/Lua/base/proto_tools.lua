@@ -2,6 +2,9 @@
 local Class  = {}
 Class.config = require("config/proto")
 
+Class.__index = Class
+setmetatable(Class,Class)
+
 function Class:call_to_bin(class_name,fun,...)
 	local arg = {...}
 
@@ -12,7 +15,7 @@ function Class:call_to_bin(class_name,fun,...)
 	self:write_int(0)
 	self:write_int(fun.id)
 
-	for i,param_def in ipairs(fun.param_list) do		
+	for i,param_def in ipairs(fun.param_list) do
 		if arg[i] ~= nil then
 			if param_def.is_array then
 				self:write_array(param_def.type,arg[i])
@@ -20,8 +23,8 @@ function Class:call_to_bin(class_name,fun,...)
 				self:write(param_def.type,arg[i])
 			end
 		else
-			self:write_null()	
-		end		
+			self:write_null()
+		end
 	end
 
 	return self.bin
@@ -46,26 +49,26 @@ function Class:bin_to_call(bin,pos)
 	end
 
 	local params = {}
-	for i,param_def in ipairs(fun.param_list) do		
-		
+	for i,param_def in ipairs(fun.param_list) do
+
 		if param_def.is_array then
 			params[i] = self:read_array(param_def.type)
 		else
-			params[i] = self:read_value(param_def.type)			
+			params[i] = self:read_value(param_def.type)
 		end
-	end	
+	end
 
 	return fun.class_name,fun.name,params
 end
 
 function Class:read_array( type_name  )
-	
+
 	local n = self:read_int()
 	if n == 0 then
 		return {}
 	elseif n then
 		local data = {}
-		for i=1,n do			
+		for i=1,n do
 			data[i] = self:read_value(type_name)
 		end
 		return data
@@ -104,12 +107,12 @@ function  Class:read_value( type_name  )
 						data[v.name] = self:read_value(v.type)
 					end
 				end
-				return data 
+				return data
 			else
 				return nil
 			end
 		end
-	end		
+	end
 end
 
 function  Class:read_int()
@@ -170,7 +173,7 @@ end
 
 
 function Class:get_fun_by_id(id)
-	
+
 	for _,fun in pairs(self.config.funs) do
 		if fun.id == id then
 			return fun
@@ -180,7 +183,7 @@ function Class:get_fun_by_id(id)
 	assert(false,"can't found fun:" .. id)
 end
 
-function Class:get_fun(class_name,fun)	
+function Class:get_fun(class_name,fun)
 
 	for _,v in pairs(self.config.funs) do
 		if v.name == fun and v.class_name == class_name then
@@ -192,7 +195,7 @@ function Class:get_fun(class_name,fun)
 end
 
 function Class:get_type(type_name)
-	
+
 	for _,v in pairs(self.config.types) do
 		if v.name == type_name then
 			return v
@@ -210,7 +213,7 @@ function Class:write_array( type_name, data )
 		assert(type(data) == "table")
 
 		self:write_int(#data)
-		for i,value in ipairs(data) do	
+		for i,value in ipairs(data) do
 			self:write(type_name,value)
 		end
 	end
@@ -228,7 +231,7 @@ function Class:write(type_name,data)
 			self:write_bool(data)
 		elseif type_name == "Single" then
 			self:write_float(data)
-		else			
+		else
 			data_type = self:get_type(type_name)
 
 			if data_type.is_enum then
@@ -238,7 +241,7 @@ function Class:write(type_name,data)
 						id = i
 						break
 					end
-				end	
+				end
 				if id then
 					self:write_int(id)
 				else
@@ -272,15 +275,15 @@ function  Class:write_int(data)
 	data = math.floor(data)
 
 	if data < 128 then
-		self.bin = self.bin .. string.char(data)		
+		self.bin = self.bin .. string.char(data)
 	else
 		local datas = {}
 		local n = 0
 		while data >= 128 do
 			n = n + 1
-			datas[n] = data % 128 
+			datas[n] = data % 128
 			data = data / 128
-		end 
+		end
 
 		n = n + 1
 		datas[n] =  data
@@ -308,7 +311,7 @@ function  Class:write_bool(data)
 		self.bin = self.bin .. string.char(1)
 	else
 		self.bin = self.bin .. string.char(0)
-	end	
+	end
 end
 
 function  Class:write_float(data)

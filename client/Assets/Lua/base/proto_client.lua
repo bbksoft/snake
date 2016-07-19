@@ -12,12 +12,11 @@ function  Class:connect(ip,port)
 
 		self.sock:settimeout(0)
 
-		fun = function ()
+		self.fun = function()
 			self:update()
 		end
 
-		self.timer = Timer.New(fun,0,-1,false)
-		self.timer:Start()
+		UpdateBeat:Add(self.fun,self)
 
 		return true
 	else
@@ -34,7 +33,7 @@ function  Class:send(class,fun,...)
 	local n2 =  len % 256
 
 	bin = string.char(n1,n2) .. bin
-	
+
 	if self.sock then
 		self.sock:send(bin)
 	end
@@ -55,12 +54,12 @@ function Class:update()
 		end
 
         if receive_status ~= "closed" then
-            if response then        
+            if response then
                	if self.pack_len then
                 	self:do_response(response)
                 	self.pack_len = nil
                 else
-                	self.pack_len = string.byte(response,1) * 256 + string.byte(response,2)                	
+                	self.pack_len = string.byte(response,1) * 256 + string.byte(response,2)
                 end
                 self:update()
             end
@@ -68,12 +67,12 @@ function Class:update()
         	if self.on_disconnect then
         		self.on_disconnect()
         	end
-            self.sock = nil            
+            self.sock = nil
         end
 	end
 end
 
-function  Class:do_response(data)	
+function  Class:do_response(data)
 	local call_class,call_fun,call_params = proto:bin_to_call(data)
 
 	print("call",call_class,call_fun)
@@ -82,17 +81,18 @@ function  Class:do_response(data)
 end
 
 function Class:close()
-	if self.timer then
-		self.timer:Stop()
-		self.time = nil
+	if self.fun then
+		UpdateBeat:Remove(self.fun,self)
+		self.fun = nil
 	end
 
-	if self.sock then	
+	if self.sock then
 		self.sock:close()
 		self.sock = nil
-	end	
+	end
 	self.temp_data = nil
 	self.pack_len = nil
+
 end
 
 

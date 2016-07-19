@@ -22,6 +22,19 @@ local ret = {
 			},
 		},
 		{
+			name="snake_point",
+			menbers = {
+				{
+					name = "x",
+					type = "Single",
+				},
+				{
+					name = "y",
+					type = "Single",
+				},
+			},
+		},
+		{
 			name="snake_data",
 			menbers = {
 				{
@@ -29,27 +42,22 @@ local ret = {
 					type = "Int",
 				},
 				{
-					name = "path_x",
-					type = "Single",
-					is_array = true,
-				},
-				{
-					name = "path_y",
-					type = "Single",
+					name = "path",
+					type = "snake_point",
 					is_array = true,
 				},
 			},
 		},
 		{
-			name="AcountData",
+			name="top_info",
 			menbers = {
-				{
-					name = "id",
-					type = "Int",
-				},
 				{
 					name = "name",
 					type = "String",
+				},
+				{
+					name = "len",
+					type = "Single",
 				},
 			},
 		},
@@ -57,9 +65,29 @@ local ret = {
 	funs = {
 		{
 			id=1,
+			name="enter_ack",
+			class_name="client_handle",
+			param_list = {
+				{
+					type = "Single",
+				},
+				{
+					type = "Int",
+				},
+			},
+			ret = 
+				{
+					type = "Void",
+				},
+		},
+		{
+			id=2,
 			name="update_snakes",
 			class_name="client_handle",
 			param_list = {
+				{
+					type = "Single",
+				},
 				{
 					type = "snake_data",
 					is_array = true,
@@ -71,27 +99,53 @@ local ret = {
 				},
 		},
 		{
-			id=2,
-			name="login",
-			class_name="Account",
+			id=3,
+			name="update_top",
+			class_name="client_handle",
 			param_list = {
 				{
-					type = "String",
-				},
-				{
-					type = "String",
+					type = "top_info",
+					is_array = true,
 				},
 			},
 			ret = 
 				{
-					type = "AcountData",
+					type = "Void",
 				},
 		},
 		{
-			id=3,
+			id=4,
+			name="snake_death",
+			class_name="client_handle",
+			param_list = {
+				{
+					type = "Int",
+				},
+			},
+			ret = 
+				{
+					type = "Void",
+				},
+		},
+		{
+			id=5,
+			name="snake_enter",
+			class_name="Game",
+			param_list = {
+			},
+			ret = 
+				{
+					type = "Void",
+				},
+		},
+		{
+			id=6,
 			name="snake_turn",
 			class_name="Game",
 			param_list = {
+				{
+					type = "Single",
+				},
 				{
 					type = "Single",
 				},

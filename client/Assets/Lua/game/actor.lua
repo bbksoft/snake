@@ -39,9 +39,8 @@ function Actor:init()
         self.path = {self.pos:Clone(),self.pos}
     end
 
-    if not self.trail_len  then
-        self.trail_len = 1
-    end
+
+    self.trail_len = self.length
 
     self.obj = load_gameobject("snake/snake")
     self.obj_head = self.obj.transform:FindChild("head").gameObject
@@ -130,6 +129,8 @@ function Actor:update_move()
         local d = pos2:Clone():Sub(pos1)
         local len = d:Magnitude()
 
+        local test1 = pos1.x
+
         if len <= dis then
             dis = dis - len
             table.remove(self.path,1)
@@ -137,6 +138,7 @@ function Actor:update_move()
             pos1:Add(d:Div(len):Mul(dis))
             dis = 0
         end
+
     end
 
 
@@ -150,6 +152,11 @@ function Actor:add_path()
     -- for i,v in ipairs(self.path) do
     --     print(v.x,v.y)
     -- end
+end
+
+function Actor:set_length(value)
+    self:add_trail(self.length-value)
+    self.length = value
 end
 
 function Actor:add_trail(value)

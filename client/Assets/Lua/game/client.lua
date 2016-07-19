@@ -34,10 +34,12 @@ function Client:init()
     self.pt_obj = GameObject.Find("Pts")
 
     local fun = function()
+
+
         while ( self.fixed_time < Time.realtimeSinceStartup ) do
             self:update_fixed()
 
-            if (self.time < self.fixed_time) then
+            if (self.time + self.fixed_dt < self.fixed_time) then
                 self:update(self.fixed_dt)
             end
 
@@ -89,7 +91,7 @@ function Client:update_fixed()
         v:update_fixed()
     end
 
-    if self.pt_time < self.time then
+    if false and self.pt_time < self.time then
         local x = (math.random() - 0.5) * 5 + self.me.pos.x
         local y = (math.random() - 0.5) * 5 + self.me.pos.y
 

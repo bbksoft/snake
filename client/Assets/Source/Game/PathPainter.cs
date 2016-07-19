@@ -56,6 +56,7 @@ public class PathPainter : MonoBehaviour {
 
             dis = dis / width;
 
+            
             UV[pos * 4 + 0] = new Vector2(0, uv_top + 0);
             UV[pos * 4 + 1] = new Vector2(1, uv_top + 0);
             UV[pos * 4 + 2] = new Vector2(1, uv_top + dis);

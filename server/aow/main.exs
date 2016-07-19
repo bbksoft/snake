@@ -7,9 +7,9 @@ defmodule Main_runner do
 		servers = [
 			G,
 			Proto,
-			{Server.User,[[]]},
-		]		
-
+			{Server.User,[[Game]]},
+			Game
+		]
 		start(servers)
 	end
 
@@ -22,14 +22,14 @@ defmodule Main_runner do
 			_ ->
 				apply(value,:start,[])
 				value
-			end			
+			end
 		end)
 		run(servers)
 	end
 
 	defp stop(servers) do
-		Enum.map(servers,fn(value)->			
-			apply(value,:stop,[])						
+		Enum.map(servers,fn(value)->
+			apply(value,:stop,[])
 		end)
 	end
 
@@ -38,7 +38,7 @@ defmodule Main_runner do
 		:stop ->
 			Tools.log("server stop ...")
 			stop(servers)
-		_ ->	
+		_ ->
 			run(servers)
 		end
 	end
